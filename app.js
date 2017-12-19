@@ -52,14 +52,14 @@ router.get('/callback', async (ctx, next) => {
 apiRouter.get('/access_token', async (ctx, next) => {
     const {accessToken} = ctx.session;
     ctx.body = {
-        access_token: accessToken,
+        access_token: accessToken || null,
     };
 });
 
 apiRouter.get('/refresh_token', async (ctx, next) => {
     const {refreshToken} = ctx.session;
     if (!refreshToken) {
-        ctx.status = 401;
+        return ctx.status = 401;
     }
     const data = {
         grant_type: 'refresh_token',
