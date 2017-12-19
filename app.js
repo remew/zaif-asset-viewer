@@ -56,6 +56,27 @@ apiRouter.get('/access_token', async (ctx, next) => {
     };
 });
 
+apiRouter.get('/refresh_token', async (ctx, next) => {
+    const {refreshToken} = ctx.session;
+    if (!refreshToken) {
+        ctx.status = 401;
+    }
+    const data = {
+        grant_type: 'refresh_token',
+        client_id: config.apiKeys.clientId,
+        client_secret: config.apiKeys.clientSecret,
+        refresh_token: refreshToken,
+    };
+    console.log(data);
+    const res = await agent.post('https://oauth.zaif.jp/v1/refresh_token').type('form').send(data).catch(e => e);
+    console.log(res.body);
+    ctx.session.accessToken = res.body.access_token;
+    ctx.session.refreshToken = res.body.refresh_token;
+    ctx.body = {
+        access_token: res.body.access_token,
+    };
+});
+
 const SESSION_CONFIG = {
 };
 
