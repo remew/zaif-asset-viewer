@@ -48,6 +48,10 @@ router.get('/callback', async (ctx, next) => {
     ctx.session.refreshToken = res.body.refresh_token;
     ctx.redirect('./');
 });
+router.get('/logout', async (ctx, next) => {
+    ctx.session = null;
+    ctx.redirect('./');
+});
 
 apiRouter.get('/access_token', async (ctx, next) => {
     const {accessToken} = ctx.session;
