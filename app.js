@@ -16,7 +16,6 @@ const config = require('./config');
 const app = new Koa;
 const router = new Router();
 const apiRouter = new Router({prefix: '/api'});
-const callbackRouter = new Router({prefix: '/callback'});
 
 router.get('/oauth', async (ctx, next) => {
     const buf = await randomFill(Buffer.alloc(16));
@@ -25,11 +24,7 @@ router.get('/oauth', async (ctx, next) => {
     const url = createRedirectUrl(id, config.apiKeys.clientId);
     ctx.redirect(url);
 });
-
-callbackRouter.get('/', async (ctx, next) => {
-    ctx.body = 'ok';
-});
-callbackRouter.post('/', async (ctx, next) => {
+router.get('/callback', async (ctx, next) => {
     ctx.body = 'ok';
 });
 
@@ -42,7 +37,6 @@ app.use(morgan('dev'));
 app.use(serve('static'));
 app.use(router.routes());
 app.use(apiRouter.routes());
-app.use(callbackRouter.routes());
 
 app.listen(8000);
 
