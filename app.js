@@ -14,15 +14,16 @@ const createRedirectUrl = require('./createRedirectUrl');
 const config = require('./config');
 
 const app = new Koa;
+const router = new Router();
 const apiRouter = new Router({prefix: '/api'});
 const callbackRouter = new Router({prefix: '/callback'});
 
-apiRouter.get('/login_url', async (ctx, next) => {
+router.get('/oauth', async (ctx, next) => {
     const buf = await randomFill(Buffer.alloc(16));
     const id = buf.toString('hex');
     ctx.session.id = id;
     const url = createRedirectUrl(id, config.apiKeys.clientId);
-    ctx.body = url;
+    ctx.redirect(url);
 });
 
 callbackRouter.get('/', async (ctx, next) => {
@@ -39,6 +40,7 @@ app.keys = config.cookieKeys;
 app.use(session(SESSION_CONFIG, app));
 app.use(morgan('dev'));
 app.use(serve('static'));
+app.use(router.routes());
 app.use(apiRouter.routes());
 app.use(callbackRouter.routes());
 
