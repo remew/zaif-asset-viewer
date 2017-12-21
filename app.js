@@ -90,6 +90,39 @@ apiRouter.get('/refresh_token', async (ctx, next) => {
     };
 });
 
+apiRouter.get('/assets', async (ctx, next) => {
+    const {accessToken} = ctx.session;
+    if (!accessToken) {
+        return ctx.status = 401;
+    }
+    const res = await agent.post('https://api.zaif.jp/tapi', {
+        nonce: Date.now() / 1000,
+        method: 'get_info2',
+    }).type('form').set('token', accessToken);
+
+    const {funds} = res.body.return;
+
+    const jpyBaseAssets = {};
+
+    for (const [upperCoinName, value] of Object.entries(funds)) {
+        if (value === 0) {
+            continue;
+        }
+        const coinName = upperCoinName.toLowerCase();
+        if (coinName === 'jpy') {
+            jpyBaseAssets.jpy = value;
+            continue;
+        }
+        const lastPrice = await getLastPrice(`${coinName}_jpy`);
+        jpyBaseAssets[coinName] = value * lastPrice;
+    }
+
+    ctx.body = {
+        assets: funds,
+        jpy_base_assets: jpyBaseAssets,
+    };
+});
+
 const SESSION_CONFIG = {
 };
 
