@@ -18,6 +18,15 @@ const app = new Koa;
 const router = new Router();
 const apiRouter = new Router({prefix: '/api'});
 
+async function getLastPrice(pair) {
+    try {
+        const res = await agent.get(`https://api.zaif.jp/api/1/last_price/${pair}`);
+        return res.body.last_price;
+    } catch (e) {
+        return NaN;
+    }
+}
+
 router.get('/oauth', async (ctx, next) => {
     const buf = await randomFill(Buffer.alloc(16));
     const id = buf.toString('hex');
