@@ -10,6 +10,18 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
     else {
         root.innerHTML = '<a href="logout">Logout</a>';
+        console.time('fetch');
+        const res = await fetch('./api/assets', {
+                credentials: 'include',
+        });
+        const result = await res.json();
+        console.log(result);
+        console.timeEnd('fetch');
+        const {jpy_base_assets: jpyBaseAssets} = result;
+
+        console.log(typeof jpyBaseAssets.jpy);
+        const tr = Object.entries(jpyBaseAssets).map(([key, value]) => `<tr><td>${key}</td><td>${value.toFixed(2)}</td></tr>`).join('');
+        root.innerHTML += `<table>${tr}</table>`;
     }
 });
 
