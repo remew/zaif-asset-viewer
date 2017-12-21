@@ -46,13 +46,10 @@ router.get('/callback', async (ctx, next) => {
         client_secret: config.apiKeys.clientSecret,
         redirect_uri: 'https://apps.remew.net/zaif-asset-viewer/callback',
     };
-    console.log(data);
     const res = await agent.post('https://oauth.zaif.jp/v1/token').type('form').send(data).catch(e => e);
     if (!res.body) {
-        console.log(res);
         throw res;
     }
-    console.log(res.body);
     ctx.session.accessToken = res.body.access_token;
     ctx.session.refreshToken = res.body.refresh_token;
     ctx.redirect('./');
@@ -80,9 +77,7 @@ apiRouter.get('/refresh_token', async (ctx, next) => {
         client_secret: config.apiKeys.clientSecret,
         refresh_token: refreshToken,
     };
-    console.log(data);
     const res = await agent.post('https://oauth.zaif.jp/v1/refresh_token').type('form').send(data).catch(e => e);
-    console.log(res.body);
     ctx.session.accessToken = res.body.access_token;
     ctx.session.refreshToken = res.body.refresh_token;
     ctx.body = {
