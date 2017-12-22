@@ -95,6 +95,10 @@ apiRouter.get('/assets', async (ctx, next) => {
         method: 'get_info2',
     }).type('form').set('token', accessToken);
 
+    if (res.body.return.success === '0') {
+        console.error(res.body);
+        throw new Error('api failed');
+    }
     const {funds} = res.body.return;
 
     const jpyBaseAssets = {};
