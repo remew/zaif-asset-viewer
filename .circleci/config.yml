@@ -43,6 +43,6 @@ jobs:
           command: yarn test
 
       - run:
-          name: hoge
-          command: echo ${EXAMPLE_VAR}
+          name: Deploy
+          command: ./deploy.sh
 
