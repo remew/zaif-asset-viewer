@@ -2,6 +2,9 @@
   "name": "zaif-asset-viewer",
   "version": "0.0.0",
   "main": "index.js",
+  "scripts": {
+    "test": "echo test"
+  },
   "repository": "git@github.com:remew/zaif-asset-viewer.git",
   "author": "remew <foolishremew@gmail.com>",
   "license": "MIT",
