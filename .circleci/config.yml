@@ -42,3 +42,7 @@ jobs:
           name: Run test
           command: yarn test
 
+      - run:
+          name: hoge
+          command: echo ${EXAMPLE_VAR}
+
