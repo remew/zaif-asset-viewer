@@ -49,11 +49,9 @@ jobs:
 
       - run:
           name: Fix host authenticity
-          command: |
-            echo '|1|/+GvROQmwYQ7hbcrM5IT+/8NecE=|L3SM8fZwCuuYKs1uGDBZjbS621A= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJzJKZP8JpygaD5mu489d0I6cSh7avzfDCSkbv/6nG36wRCLm9BrxwyOZvZ6DG8g2XlMeCE3VS+rK2IsQnDDncc=' >> ~/.ssh/known_hosts
-            echo '|1|YQpXK2nqejSEQX8DhPJDpYUK5oE=|PwXImUnQnBWPL1uAxNODkV3dfx4= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJzJKZP8JpygaD5mu489d0I6cSh7avzfDCSkbv/6nG36wRCLm9BrxwyOZvZ6DG8g2XlMeCE3VS+rK2IsQnDDncc=' >> ~/.ssh/known_hosts
+          command: ssh-keyscan -p ${SERVER_PORT} apps.remew.net >> ~/.ssh/known_hosts
 
       - run:
           name: Deploy
-          command: ssh apps.remew.net -p ${SERVER_PORT} ~/deploy.sh
+          command: ssh remew@apps.remew.net -p ${SERVER_PORT} /home/remew/deploy.sh
 
