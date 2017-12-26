@@ -27,6 +27,11 @@ jobs:
             - v1-node-{{ .Branch }}-
             - v1-node-
 
+
+      - add_ssh_keys:
+          fingerprints:
+            - "3a:8b:5b:aa:92:53:d2:9d:d2:3a:78:1f:52:37:a4:79"
+
       - run:
           name: Install dependencies
           command: yarn install
