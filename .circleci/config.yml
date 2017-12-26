@@ -43,6 +43,10 @@ jobs:
           command: yarn test
 
       - run:
+          name: Fix host authenticity
+          command: ssh-keyscan apps.remew.net >> ~/.ssh/known_hosts
+
+      - run:
           name: Deploy
           command: ./deploy.sh
 
