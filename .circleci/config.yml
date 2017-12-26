@@ -44,7 +44,7 @@ jobs:
 
       - run:
           name: Fix host authenticity
-          command: ssh-keyscan -p ${SERVER_PORT} apps.remew.net >> ~/.ssh/known_hosts
+          command: ssh-keyscan -H -p ${SERVER_PORT} apps.remew.net >> ~/.ssh/known_hosts
 
       - run:
           name: Deploy
