@@ -7,7 +7,7 @@ module.exports = function createRedirectUrl(state, clientId) {
         state,
         response_type: 'code',
         scope: 'info',
-        redirect_uri: 'https://apps.remew.net/zaif-asset-viewer/callback',
+        redirect_uri: config.redirectUrl,
     };
 
     return `${urlBase}?${Object.entries(data).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&')}`;

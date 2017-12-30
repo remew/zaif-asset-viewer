@@ -6,5 +6,6 @@ module.exports = {
         clientSecret: '',
     },
     cookieKeys: [],
+    redirectUrl: 'http://example.com',
 };
 

@@ -44,7 +44,7 @@ router.get('/callback', async (ctx, next) => {
         grant_type: 'authorization_code',
         client_id: config.apiKeys.clientId,
         client_secret: config.apiKeys.clientSecret,
-        redirect_uri: 'https://apps.remew.net/zaif-asset-viewer/callback',
+        redirect_uri: config.redirectUrl,
     };
     const res = await agent.post('https://oauth.zaif.jp/v1/token').type('form').send(data).catch(e => e);
     if (!res.body) {
