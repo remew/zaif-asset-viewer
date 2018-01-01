@@ -53,5 +53,8 @@ jobs:
 
       - run:
           name: Deploy
-          command: ssh remew@apps.remew.net -p ${SERVER_PORT} /home/remew/deploy.sh
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              ssh remew@apps.remew.net -p ${SERVER_PORT} /home/remew/deploy.sh
+            fi
 
