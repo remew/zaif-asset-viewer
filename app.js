@@ -18,6 +18,38 @@ const app = new Koa;
 const router = new Router();
 const apiRouter = new Router({prefix: '/api'});
 
+async function refreshTokenIfNecessary(ctx, next) {
+    const now = Date.now();
+    const expireIn = ctx.session.tokenExpire;
+
+    console.log('now:%s expire_in:%s', now, expireIn);
+    if (Number.isNaN(Number(expireIn)) || expireIn <= now) {
+        console.log('token expire');
+        const {refreshToken} = ctx.session;
+        if (!refreshToken) {
+            return ctx.status = 401;
+        }
+        const data = {
+            grant_type: 'refresh_token',
+            client_id: config.apiKeys.clientId,
+            client_secret: config.apiKeys.clientSecret,
+            refresh_token: refreshToken,
+        };
+        const res = await agent.post('https://oauth.zaif.jp/v1/refresh_token').type('form').send(data).catch(e => e);
+        console.log('%o', res.body);
+        ctx.session.accessToken = res.body.access_token;
+        ctx.session.refreshToken = res.body.refresh_token;
+        const newExpireIn =  now + (res.body.expires_in * 1000);
+        console.log(newExpireIn);
+        ctx.session.tokenExpire = newExpireIn;
+    }
+    else {
+        console.log('token is not expire');
+    }
+
+    await next();
+}
+
 async function getLastPrice(pair) {
     try {
         const res = await agent.get(`https://api.zaif.jp/api/1/last_price/${pair}`);
@@ -52,6 +84,7 @@ router.get('/callback', async (ctx, next) => {
     }
     ctx.session.accessToken = res.body.access_token;
     ctx.session.refreshToken = res.body.refresh_token;
+    ctx.session.tokenExpire = Date.now() + (res.body.expire_in * 1000);
     ctx.redirect('./');
 });
 router.get('/logout', async (ctx, next) => {
@@ -85,7 +118,7 @@ apiRouter.get('/refresh_token', async (ctx, next) => {
     };
 });
 
-apiRouter.get('/assets', async (ctx, next) => {
+apiRouter.get('/assets', refreshTokenIfNecessary, async (ctx, next) => {
     const {accessToken} = ctx.session;
     if (!accessToken) {
         return ctx.status = 401;
