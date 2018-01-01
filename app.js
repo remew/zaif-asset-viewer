@@ -39,7 +39,7 @@ async function refreshTokenIfNecessary(ctx, next) {
         console.log('%o', res.body);
         ctx.session.accessToken = res.body.access_token;
         ctx.session.refreshToken = res.body.refresh_token;
-        const newExpireIn =  now + (res.body.expires_in * 1000);
+        const newExpireIn = now + (res.body.expires_in * 1000);
         console.log(newExpireIn);
         ctx.session.tokenExpire = newExpireIn;
     }
@@ -47,7 +47,7 @@ async function refreshTokenIfNecessary(ctx, next) {
         console.log('token is not expire');
     }
 
-    await next();
+    return await next();
 }
 
 async function getLastPrice(pair) {
@@ -59,14 +59,14 @@ async function getLastPrice(pair) {
     }
 }
 
-router.get('/oauth', async (ctx, next) => {
+router.get('/oauth', async (ctx) => {
     const buf = await randomFill(Buffer.alloc(16));
     const id = buf.toString('hex');
     ctx.session.id = id;
     const url = createRedirectUrl(id, config.apiKeys.clientId);
     ctx.redirect(url);
 });
-router.get('/callback', async (ctx, next) => {
+router.get('/callback', async (ctx) => {
     const {state, code} = ctx.request.query;
     if (state !== ctx.session.id) {
         return ctx.status = 400;
@@ -87,19 +87,19 @@ router.get('/callback', async (ctx, next) => {
     ctx.session.tokenExpire = Date.now() + (res.body.expire_in * 1000);
     ctx.redirect('./');
 });
-router.get('/logout', async (ctx, next) => {
+router.get('/logout', async (ctx) => {
     ctx.session = null;
     ctx.redirect('./');
 });
 
-apiRouter.get('/access_token', async (ctx, next) => {
+apiRouter.get('/access_token', async (ctx) => {
     const {accessToken} = ctx.session;
     ctx.body = {
         access_token: accessToken || null,
     };
 });
 
-apiRouter.get('/refresh_token', async (ctx, next) => {
+apiRouter.get('/refresh_token', async (ctx) => {
     const {refreshToken} = ctx.session;
     if (!refreshToken) {
         return ctx.status = 401;
@@ -118,7 +118,7 @@ apiRouter.get('/refresh_token', async (ctx, next) => {
     };
 });
 
-apiRouter.get('/assets', refreshTokenIfNecessary, async (ctx, next) => {
+apiRouter.get('/assets', refreshTokenIfNecessary, async (ctx) => {
     const {accessToken} = ctx.session;
     if (!accessToken) {
         return ctx.status = 401;
