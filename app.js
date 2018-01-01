@@ -156,6 +156,7 @@ apiRouter.get('/assets', refreshTokenIfNecessary, async (ctx, next) => {
 });
 
 const SESSION_CONFIG = {
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
 };
 
 app.keys = config.cookieKeys;
