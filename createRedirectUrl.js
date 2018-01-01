@@ -1,5 +1,7 @@
 'use strict';
 
+const config = require('./config');
+
 module.exports = function createRedirectUrl(state, clientId) {
     const urlBase = 'https://zaif.jp/oauth';
     const data = {
