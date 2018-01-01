@@ -1,3 +1,4 @@
+/*eslint strict: ['off']*/
 window.addEventListener('DOMContentLoaded', async () => {
     const root = document.getElementById('root');
 
@@ -12,7 +13,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         root.innerHTML = '<a href="logout">Logout</a>';
         console.time('fetch');
         const res = await fetch('./api/assets', {
-                credentials: 'include',
+            credentials: 'include',
         });
         const result = await res.json();
         console.log(result);

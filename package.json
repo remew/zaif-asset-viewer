@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo test"
+    "test": "eslint ."
   },
   "repository": "git@github.com:remew/zaif-asset-viewer.git",
   "author": "remew <foolishremew@gmail.com>",
@@ -16,5 +16,9 @@
     "koa-session": "^5.5.1",
     "koa-static": "^4.0.2",
     "superagent": "^3.8.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.1.2",
+    "eslint": "^4.14.0"
   }
 }
